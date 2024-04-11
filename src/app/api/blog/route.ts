@@ -1,16 +1,9 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-
+import { main } from "@/utils";
 const prisma = new PrismaClient();
 
-export async function main(){
-    try {
-        await prisma.$connect();
-        
-    } catch (error) {
-        return Error("Database connection error");
-    }
-}
+
 export const GET = async (req: Request,res:NextResponse) => {
     try {
         await main();

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Fragment, useRef } from "react";
 import { Toaster, toast } from "react-hot-toast";
@@ -42,7 +43,7 @@ const AddBlog = () => {
       <Toaster />
       <div className="w-full m-auto flex my-4 p-2">
         <div className="flex flex-col justify-center items-center m-auto">
-          <p className="text-2xl text-slate-200 font-bold p-3">
+          <p className="text-2xl text-slate-200 text-slate-800 dark:text-slate-200 font-bold p-3">
             Add A Wonderful Blog 🚀
           </p>
           <form onSubmit={handleSubmit}>
@@ -50,16 +51,16 @@ const AddBlog = () => {
               ref={titleRef}
               placeholder="Enter Title"
               type="text"
-              className="rounded-md px-4 w-full py-2 my-2 "
+              className="bg-slate-200 dark:bg-slate-800 rounded-md px-4 w-full py-2 my-2 "
             />
             <textarea
               ref={descriptionRef}
               placeholder="Enter Description"
-              className="rounded-md px-4 py-2 w-full my-2"
+              className="rounded-md bg-slate-200 dark:bg-slate-800 px-4 py-2 w-full my-2"
             ></textarea>
-            <button className="font-semibold px-4 py-2 shadow-xl bg-slate-200 rounded-lg m-auto hover:bg-slate-100">
+            <Button className="font-semibold px-4 py-2 shadow-xl  rounded-lg m-auto ">
               Submit
-            </button>
+            </Button>
           </form>
         </div>
       </div>

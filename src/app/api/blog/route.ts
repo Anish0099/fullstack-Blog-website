@@ -4,26 +4,26 @@ import { $posts } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs";
 
 
+export const runtime = "edge";
 
+// export const GET = async (req: Request,res:NextResponse) => {
+//     // try {
+//     //     await main();
+//     //     const posts = await prisma.post.findMany();
+//     //     console.log(posts)
 
-export const GET = async (req: Request,res:NextResponse) => {
-    // try {
-    //     await main();
-    //     const posts = await prisma.post.findMany();
-    //     console.log(posts)
-
-    //     return NextResponse.json({message:"success",posts},{status:200})
+//     //     return NextResponse.json({message:"success",posts},{status:200})
         
-    // } catch (error) {
-    //     return NextResponse.json({
-    //         status: 500,
-    //         message: "Internal Server Error",
-    //     }) 
-    // } finally{
-    //     await prisma.$disconnect();
-    // }
+//     // } catch (error) {
+//     //     return NextResponse.json({
+//     //         status: 500,
+//     //         message: "Internal Server Error",
+//     //     }) 
+//     // } finally{
+//     //     await prisma.$disconnect();
+//     // }
     
-}
+// }
 
 export const POST = async (req: Request,res:NextResponse) => {
     const { userId } = auth();

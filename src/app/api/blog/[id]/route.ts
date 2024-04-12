@@ -4,7 +4,7 @@ import { $posts } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 
-
+export const runtime = "edge";
 
 export const GET = async (req: Request, res: NextResponse) => {
 

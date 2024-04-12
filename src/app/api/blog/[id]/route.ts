@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
-import { main } from "@/lib/db";
-import prisma from "@/lib/db";
+import { db } from "@/lib/db";
+import { $posts } from "@/lib/db/schema";
+import { auth } from "@clerk/nextjs";
+import { eq } from "drizzle-orm";
 
 
 export const GET = async (req: Request, res: NextResponse) => {
 
     try {
-        const id = req.url.split("/blog/")[1]
-        await main();
-        const post = await prisma.post.findUnique({ where: { id } });
+        const postId = req.url.split("/blog/")[1]
+        
+        const post = await db.select().from($posts).where(eq($posts.id, postId));
+        
         return NextResponse.json({message:"success",post},{status:200})
         
     } catch (error) {
@@ -16,42 +19,36 @@ export const GET = async (req: Request, res: NextResponse) => {
             status: 500,
             message: "Internal Server Error",
         }) 
-    } finally{
-        await prisma.$disconnect();
-    }
+    } 
     
 }
 
 export const DELETE = async (req: Request, res: NextResponse) => {
     try {
         const id = req.url.split("/blog/")[1];
-        await main();
-        const post = await prisma.post.delete({where: {id}});
+        
+        const post = await db.delete($posts).where(eq($posts.id, id));
         return NextResponse.json({message:"success",post},{status:200}) 
     } catch (error) {
         return NextResponse.json({
             status: 500,
             message: "Internal Server Error",
         }) 
-    } finally{
-        await prisma.$disconnect();
-    }
+    } 
 }
 
 export const PUT = async (req: Request, res: NextResponse) => {
     try {
         const id = req.url.split("/blog/")[1];
         const {title, description} = await req.json();
-        await main();
-        const post = await prisma.post.update({data: {title, description}, where: {id}});
+        
+        const post = await db.update($posts).set({title, description}).where(eq($posts.id, id));
         return NextResponse.json({message:"success",post},{status:200}) 
     } catch (error) {
         return NextResponse.json({
             status: 500,
             message: "Internal Server Error",
         }) 
-    } finally{
-        await prisma.$disconnect();
-    }
+    } 
     
 }

@@ -1,14 +1,24 @@
+import { db } from "@/lib/db";
+import { UserButton, auth } from "@clerk/nextjs";
 import Link from "next/link";
+import { $posts } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
 async function fetchBlogs() {
-  const res = await fetch("http://localhost:3000/api/blog");
-  const data = await res.json();
-
-  return data.posts;
+  // const res = await fetch("http://localhost:3000/api/blog", {
+  //   cache: "no-store",
+  //   next: { revalidate: 4 },
+  // });
+  // const data = await res.json();
+  // return data.posts;
 }
 
 export default async function Home() {
-  const posts = await fetchBlogs();
+  const { userId } = auth();
+  const posts = await db
+    .select()
+    .from($posts)
+    .where(eq($posts.userId, userId!));
 
   return (
     <main className="w-full h-full p-1">
@@ -24,6 +34,7 @@ export default async function Home() {
           className=" md:w-1/6 sm:w-2/4 text-center flex justify-center items-center gap-2 rounded-md p-2 m-auto bg-slate-200 font-semibold"
         >
           Add New Blog
+          <UserButton />
         </Link>
       </div>
       {/* Blogs */}
@@ -48,7 +59,7 @@ export default async function Home() {
             {/* Date & Description */}
             <div className="mr-auto my-1">
               <blockquote className="font-bold text-slate-700">
-                {new Date(post.date).toDateString()}
+                {new Date(post.createdAt).toDateString()}
               </blockquote>
             </div>
             <div className=" mr-auto my-1">

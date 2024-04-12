@@ -30,7 +30,8 @@ const deleteBlog = async (id: string) => {
 const getBlogById = async (id: string) => {
   const res = await fetch(`http://localhost:3000/api/blog/${id}`);
   const data = await res.json();
-  return data.post;
+  console.log(data);
+  return data;
 };
 
 const EditBlog = ({ params }: { params: { id: string } }) => {
@@ -42,9 +43,13 @@ const EditBlog = ({ params }: { params: { id: string } }) => {
     toast.loading("Fetching Blog Details 🚀", { id: "1" });
     getBlogById(params.id)
       .then((data) => {
+        const {
+          post: [blogPost],
+        } = data;
         if (titleRef.current && descriptionRef.current) {
-          titleRef.current.value = data.title;
-          descriptionRef.current.value = data.description;
+          titleRef.current.value = blogPost.title;
+          console.log(data.title);
+          descriptionRef.current.value = blogPost.description;
           toast.success("Fetching Complete", { id: "1" });
         }
       })

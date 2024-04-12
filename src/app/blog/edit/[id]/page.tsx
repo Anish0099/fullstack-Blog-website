@@ -8,31 +8,6 @@ type UpdateBlogParams = {
   description: string;
   id: string;
 };
-const updateBlog = async (data: UpdateBlogParams) => {
-  const res = fetch(`http://localhost:3000/api/blog/${data.id}`, {
-    method: "PUT",
-    body: JSON.stringify({ title: data.title, description: data.description }),
-    //@ts-ignore
-    "Content-Type": "application/json",
-  });
-  return (await res).json();
-};
-
-const deleteBlog = async (id: string) => {
-  const res = fetch(`http://localhost:3000/api/blog/${id}`, {
-    method: "DELETE",
-    //@ts-ignore
-    "Content-Type": "application/json",
-  });
-  return (await res).json();
-};
-
-const getBlogById = async (id: string) => {
-  const res = await fetch(`http://localhost:3000/api/blog/${id}`);
-  const data = await res.json();
-  console.log(data);
-  return data;
-};
 
 const EditBlog = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -58,6 +33,35 @@ const EditBlog = ({ params }: { params: { id: string } }) => {
         toast.error("Error fetching blog", { id: "1" });
       });
   }, []);
+
+  const updateBlog = async (data: UpdateBlogParams) => {
+    const res = fetch(`/api/blog/${data.id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        title: data.title,
+        description: data.description,
+      }),
+      //@ts-ignore
+      "Content-Type": "application/json",
+    });
+    return (await res).json();
+  };
+
+  const deleteBlog = async (id: string) => {
+    const res = fetch(`/api/blog/${id}`, {
+      method: "DELETE",
+      //@ts-ignore
+      "Content-Type": "application/json",
+    });
+    return (await res).json();
+  };
+
+  const getBlogById = async (id: string) => {
+    const res = await fetch(`/api/blog/${id}`);
+    const data = await res.json();
+    console.log(data);
+    return data;
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();

@@ -3,26 +3,28 @@
 import { useRouter } from "next/navigation";
 import { Fragment, useRef } from "react";
 import { Toaster, toast } from "react-hot-toast";
-const postBlog = async ({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) => {
-  const res = fetch("http://localhost:3000/api/blog", {
-    method: "POST",
-    body: JSON.stringify({ title, description }),
-    //@ts-ignore
-    "Content-Type": "application/json",
-  });
-  return (await res).json();
-};
 
 const AddBlog = () => {
   const router = useRouter();
   const titleRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const postBlog = async ({
+    title,
+    description,
+  }: {
+    title: string;
+    description: string;
+  }) => {
+    const res = fetch("/api/blog", {
+      method: "POST",
+      body: JSON.stringify({ title, description }),
+      //@ts-ignore
+      "Content-Type": "application/json",
+    });
+    return (await res).json();
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (titleRef.current && descriptionRef.current) {

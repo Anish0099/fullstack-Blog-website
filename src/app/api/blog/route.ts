@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { main } from "@/app/lib/db";
-import prisma from "@/app/lib/db";
+import { main } from "@/lib/db";
+import prisma from "@/lib/db";
 
 
 

@@ -3,17 +3,26 @@ import { UserButton, auth } from "@clerk/nextjs";
 import Link from "next/link";
 import { $posts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { Button } from "@/components/ui/button";
+
 import { ModeToggle } from "@/components/mode-toggle";
 
-async function fetchBlogs() {
-  // const res = await fetch("http://localhost:3000/api/blog", {
-  //   cache: "no-store",
-  //   next: { revalidate: 4 },
-  // });
-  // const data = await res.json();
-  // return data.posts;
-}
+import { Copy } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import Chat from "./chat/page";
 
 export default async function Home() {
   const { userId } = auth();
@@ -42,8 +51,24 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div>
+          <div className="flex justify-center items-center gap-2 text-slate-200 font-semibold">
             <ModeToggle />
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline">Share</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Ai ChatBot</DialogTitle>
+                  <DialogDescription>
+                    Chat with this AI releated to your posts!.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <Chat />
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>

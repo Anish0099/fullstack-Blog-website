@@ -56,7 +56,7 @@ export default async function Home() {
 
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline">Share</Button>
+                <Button variant="outline">Ai Bot</Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>

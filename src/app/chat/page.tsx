@@ -1,32 +1,77 @@
 "use client";
 
-import { useChat } from "ai/react";
-
 import { Button } from "@/components/ui/button";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { chatSession } from "@/lib/GeminiAiModal";
+import { db } from "@/lib/db";
+import { $posts } from "@/lib/db/schema";
+import { useUser } from "@clerk/nextjs";
+import { eq } from "drizzle-orm";
+import { useState, useEffect } from "react";
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const { user } = useUser();
+
+  const [posts, setPosts] = useState<
+    {
+      userId: string;
+      id: number;
+      title: string;
+      description: string;
+      createdAt: Date;
+    }[]
+  >([]);
+
+  const [messages, setMessages] = useState<string>("");
+
+  const fetchRecords = async () => {
+    const records = await db
+      .select()
+      .from($posts)
+      .where(eq($posts.userId, user!.id));
+
+    setPosts(records);
+  };
+
+  useEffect(() => {
+    fetchRecords();
+  }, [user]);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(posts);
+    const InputPrompt =
+      "You are a intelligent assistant. You tell  the users about their posts" +
+      "The relevant posts are:\n " +
+      posts
+        .map(
+          (post) =>
+            `Title : ${post.title}\n\n Description : \n${post.description}`
+        )
+        .join("\n\n");
+
+    const result = await chatSession.sendMessage(InputPrompt);
+    const MockJsonResponse = result.response
+      .text()
+      .replace("```json", "")
+      .replace("```", "");
+
+    console.log(MockJsonResponse);
+
+    setMessages(MockJsonResponse);
+  };
   return (
     <div className="flex flex-col w-full max-w-md  mx-auto stretch">
       <form onSubmit={handleSubmit}>
         <ScrollArea className="h-[200px] w-[350px] rounded-md border p-4">
-          {messages.map((m) => (
-            <div key={m.id} className="whitespace-pre-wrap">
-              {m.role === "user" ? "User: " : "AI: "}
-              {m.content}
-            </div>
-          ))}
+          <div className="whitespace-pre-wrap">Ai:{messages}</div>
         </ScrollArea>
         <div className="w-full mt-2">
-          <Input
+          <Button
             className="w-[22rem] mb-0  border border-gray-300 rounded shadow-xl"
-            value={input}
-            placeholder="Say something..."
-            onChange={handleInputChange}
-          />
+            type="submit"
+          >
+            Tell me about my expenses!
+          </Button>
         </div>
       </form>
     </div>
